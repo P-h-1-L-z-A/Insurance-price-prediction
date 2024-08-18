@@ -16,47 +16,52 @@ def About():
 @app.route('/Predictor.html', methods=['POST', 'GET'])
 def predict():
     if request.method == 'POST':
-        print(request.form)
-        Age = int(request.form.get('Age'))
-        Gender = request.form.get('Gender')
-        if Gender == 'Male':
-            Gender = 1
-        else:
-            Gender = 0
-        BMI = request.form.get('BMI')
-        NC = request.form.get('NC')
-        Type = request.form.get('Type')
-        if Type == 'Smoker':
-            Type = 1
-        else:
-            Type = 0
-        Region = request.form.get('Region')
-        if Region == 'NorthEast':
-            Region = 0
-        elif Region == 'NorthWest':
-            Region = 1
-        elif Region == 'SouthEast':
-            Region = 2
-        else:
-            Region = 3
-        with open('gbr.pkl', 'rb') as f:
-            model = pickle.load(f)
-            input = np.array([Age, Gender, BMI, NC, Type, Region]).reshape(1, 6)
-            p = model.predict(input)
-            print(p[0])
-        return f'''
-        <html>
-            <head>
-                <title>Prediction Result</title>
-            </head>
-            <body style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW5zdXJhbmNlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
-                <div style="background-color:powderblue;">
-                    <h1 style="color:blue; text-align: center">The predicted cost is {p[0]}</h1>
-                </div>
-                <a href="/Predictor.html" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin-left:40rem">Predict for another Value</a>
-            </body>
-        </html>
-        '''
+        try:
+            print(request.form)
+            Age = int(request.form.get('Age'))
+            Gender = request.form.get('Gender')
+            if Gender == 'Male':
+                Gender = 1
+            else:
+                Gender = 0
+            BMI = request.form.get('BMI')
+            NC = request.form.get('NC')
+            Type = request.form.get('Type')
+            if Type == 'Smoker':
+                Type = 1
+            else:
+                Type = 0
+            Region = request.form.get('Region')
+            if Region == 'NorthEast':
+                Region = 0
+            elif Region == 'NorthWest':
+                Region = 1
+            elif Region == 'SouthEast':
+                Region = 2
+            else:
+                Region = 3
+            with open('gbr.pkl', 'rb') as f:
+                model = pickle.load(f)
+                input = np.array([Age, Gender, BMI, NC, Type, Region]).reshape(1, 6)
+                p = model.predict(input)
+                print(p[0])
+            return f'''
+            <html>
+                <head>
+                    <title>Prediction Result</title>
+                </head>
+                <body style="background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aW5zdXJhbmNlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover;">
+                    <div style="background-color:powderblue;">
+                        <h1 style="color:blue; text-align: center">The predicted cost is {p[0]}</h1>
+                    </div>
+                    <a href="/Predictor.html" style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px; margin-left:40rem">Predict for another Value</a>
+                </body>
+            </html>
+            '''
+        except Exception as e:
+        # Log the error and return an error message
+            app.logger.error(f"Error during prediction: {str(e)}")
+            return "An error occurred during prediction. Please try again later.", 500
     else:
         return render_template('Predictor.html')
 
