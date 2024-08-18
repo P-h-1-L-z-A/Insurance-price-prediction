@@ -1,6 +1,9 @@
 from flask import Flask, request, render_template
 
 app = Flask(__name__)
+
+application = app
+
 import pickle
 import numpy as np
 @app.route('/', methods =  ['GET'])
