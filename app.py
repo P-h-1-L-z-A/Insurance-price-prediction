@@ -5,7 +5,7 @@ app = Flask(__name__)
 application = app
 
 import pickle
-import numpy as np
+
 @app.route('/', methods =  ['GET'])
 def Index():
     return render_template('index.html') 
